@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Liste di Natale — Edizione Famiglia</title>
+
+  <!-- Configurazione App Mobile (iPhone & Android - Schermo intero e tema) -->
+  <meta name="theme-color" content="#3D0D13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Liste Natale" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Liste Natale" />
+
+  <!-- Icona App & Favicon generata in vettoriale (Bordeaux & Oro) -->
+  <link id="app-icon-link" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%233D0D13'/%3E%3Crect x='24' y='24' width='464' height='464' rx='92' fill='none' stroke='%23C5A059' stroke-width='8'/%3E%3Cpath d='M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240' fill='none' stroke='%23E8CFA0' stroke-width='22' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%233D0D13'/%3E%3Cpath d='M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240' fill='none' stroke='%23E8CFA0' stroke-width='22' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-ivory: #FAF7F2;
+      --bordeaux: #6B1D26;
+      --bordeaux-dark: #3D0D13;
+      --forest: #173B2B;
+      --gold: #C5A059;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-ivory);
+      color: #1E293B;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .font-serif-editorial {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .hero-christmas-login {
+      background-image: linear-gradient(to bottom, rgba(45, 10, 15, 0.72), rgba(61, 13, 19, 0.88)),
+                        url('https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .header-christmas-banner {
+      background-image: linear-gradient(to right, rgba(61, 13, 19, 0.94), rgba(23, 59, 43, 0.90)),
+                        url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center 35%;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1EDE6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#6B1D26] selection:text-white">
+
+  <!-- Effetto neve soffice -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- SCHERMATA 0: LUCCHETTO CODICE DI ACCESSO -->
+  <div id="gate-screen" class="min-h-screen flex items-center justify-center p-4 sm:p-8 bg-[radial-gradient(ellipse_at_top,_#F3ECE1_0%,_#FAF7F2_70%)]">
+    <div class="bg-white max-w-md w-full rounded-2xl shadow-[0_24px_60px_rgba(61,13,19,0.14)] border border-[#C5A059]/35 overflow-hidden relative z-10">
+      <div class="hero-christmas-login px-6 py-9 text-center text-white">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 backdrop-blur-xs border border-[#C5A059]/60 text-[#E8CFA0] mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <p class="text-[10px] font-semibold uppercase tracking-[0.26em] text-[#E8CFA0] mb-1.5">
+          Area Privata · Solo Famiglia
+        </p>
+        <h1 class="font-serif-editorial text-3xl font-bold tracking-tight text-white">
+          Liste di Natale
+        </h1>
+      </div>
+
+      <div class="h-1 w-full bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
+
+      <form id="family-code-form" class="p-7 sm:p-8 space-y-5">
+        <div class="text-center">
+          <h2 class="font-serif-editorial text-xl font-bold text-stone-900">Inserisci il Codice d'Accesso</h2>
+          <p class="text-xs text-stone-500 mt-1 leading-relaxed">
+            Richiesto solo al primo accesso per proteggere le liste dagli estranei.
+          </p>
+        </div>
+
+        <div>
+          <input
+            type="password"
+            id="family-code-input"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="8"
+            placeholder="••••••••"
+            required
+            autocomplete="off"
+            class="w-full px-4 py-3 text-center text-lg tracking-[0.35em] font-bold rounded-xl border border-stone-300 bg-[#FAF7F2]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/25 focus:border-[#6B1D26] transition"
+          />
+          <p id="family-code-error" class="hidden text-xs text-red-700 font-medium text-center mt-2">
+            Codice non valido. Controlla sul gruppo WhatsApp di famiglia.
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-[#3D0D13] hover:bg-[#54141C] text-white text-sm font-semibold py-3 rounded-xl shadow-sm transition cursor-pointer"
+        >
+          Sblocca il Registro →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCHERMATA 1: SELEZIONE NOME (22 PARTECIPANTI) -->
+  <div id="login-screen" class="hidden min-h-screen flex items-center justify-center p-4 sm:p-8 bg-[radial-gradient(ellipse_at_top,_#F3ECE1_0%,_#FAF7F2_70%)]">
+    <div class="bg-white max-w-3xl w-full rounded-2xl shadow-[0_24px_60px_rgba(61,13,19,0.12)] border border-[#C5A059]/30 overflow-hidden relative z-10">
+
+      <div class="hero-christmas-login px-6 py-9 sm:px-8 sm:py-12 text-center text-white relative">
+        <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 backdrop-blur-xs border border-[#C5A059]/50 text-[#E8CFA0] mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m0-20l-2.5 2.5M12 2l2.5 2.5M12 22l-2.5-2.5M12 22l2.5-2.5M2 12h20M2 12l2.5-2.5M2 12l2.5 2.5M22 12l-2.5-2.5M22 12l-2.5 2.5M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93" />
+          </svg>
+        </div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#E8CFA0] mb-2">
+          Edizione Festiva · Registro di Famiglia
+        </p>
+        <h1 class="font-serif-editorial text-3xl sm:text-5xl font-bold tracking-tight text-white mb-3">
+          Liste di Natale
+        </h1>
+        <div class="w-16 h-px bg-[#C5A059]/70 mx-auto mb-4"></div>
+        <p class="text-sm text-stone-200/90 max-w-md mx-auto leading-relaxed">
+          Seleziona il tuo nome per accedere alla tua lista dei desideri e scoprire in riservatezza cosa regalare ai tuoi cari.
+        </p>
+      </div>
+
+      <div class="h-1 w-full bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
+
+      <div class="p-6 sm:p-10 bg-white">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Partecipanti (22)</span>
+          <span class="text-xs text-[#C5A059] font-medium">✦ Seleziona il tuo profilo</span>
+        </div>
+
+        <div id="names-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
+          <!-- I 22 nomi vengono generati qui via JS -->
+        </div>
+
+        <div id="storage-badge" class="mt-8 pt-5 border-t border-stone-100 text-center text-xs text-stone-400 tracking-wide">
+          Connessione al database di famiglia...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHERMATA 2: APPLICAZIONE PRINCIPALE -->
+  <div id="app-screen" class="hidden min-h-screen flex flex-col relative z-10">
+    <header class="header-christmas-banner text-white shadow-md sticky top-0 z-30 border-b border-[#C5A059]/40">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 backdrop-blur-xs border border-[#C5A059]/50 flex items-center justify-center text-[#E8CFA0] shadow-inner shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h1 class="font-serif-editorial text-lg sm:text-2xl font-bold tracking-tight text-white leading-none">
+                Liste di Natale
+              </h1>
+              <span class="text-[#E8CFA0] text-xs">✦</span>
+            </div>
+            <p class="text-xs text-stone-200 mt-1">
+              Ciao, <strong id="current-user-name" class="text-[#E8CFA0] font-semibold"></strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-1.5 sm:gap-2 bg-black/30 backdrop-blur-xs px-2.5 sm:px-3.5 py-1.5 rounded-lg border border-[#C5A059]/40">
+            <label for="year-select" class="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#E8CFA0] font-semibold">Natale</label>
+            <select id="year-select" class="bg-transparent text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer">
+              <option value="2026" class="text-stone-900">2026</option>
+              <option value="2027" class="text-stone-900">2027</option>
+              <option value="2028" class="text-stone-900">2028</option>
+              <option value="2029" class="text-stone-900">2029</option>
+              <option value="2030" class="text-stone-900">2030</option>
+            </select>
+          </div>
+
+          <button onclick="logout()" class="text-xs font-medium text-stone-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg transition cursor-pointer">
+            Cambia utente
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 flex gap-1.5 pt-1">
+        <button id="tab-my-list" onclick="switchTab('my-list')" class="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg bg-[#FAF7F2] text-[#3D0D13] transition cursor-pointer text-center">
+          La Mia Lista
+        </button>
+        <button id="tab-others-list" onclick="switchTab('others-list')" class="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg text-stone-200 hover:text-white hover:bg-white/10 transition cursor-pointer text-center">
+          Liste degli Altri
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+      <!-- SEZIONE 1: LA MIA LISTA (NO SPOILER) -->
+      <section id="section-my-list" class="space-y-6">
+        <div class="bg-white rounded-xl shadow-[0_4px_20px_rgba(61,13,19,0.04)] border border-[#C5A059]/30 overflow-hidden grid grid-cols-1 md:grid-cols-12">
+          <div class="md:col-span-4 h-32 md:h-auto relative">
+            <img
+              src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80"
+              alt="Pacchi regalo di Natale"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#3D0D13]/40 to-transparent"></div>
+          </div>
+          <div class="md:col-span-8 p-5 sm:p-6 flex flex-col justify-center">
+            <div class="flex items-center gap-2 text-[#C5A059] text-xs font-bold uppercase tracking-widest mb-1.5">
+              <span>✦ Sorpresa Protetta</span>
+            </div>
+            <h2 class="font-serif-editorial text-xl font-bold text-stone-900 mb-1.5">
+              La tua lista dei desideri
+            </h2>
+            <p class="text-sm text-stone-600 leading-relaxed">
+              Aggiungi qui i regali che vorresti ricevere. Per preservare la magia del Natale, <strong>non vedrai mai le spunte</strong> né chi ha scelto i tuoi regali.
+            </p>
+          </div>
+        </div>
+
+        <form id="add-gift-form" class="bg-white p-5 sm:p-6 rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-stone-200/90 space-y-5 relative overflow-hidden">
+          <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
+
+          <div class="border-b border-stone-100 pb-3 flex items-center justify-between">
+            <div>
+              <h3 class="font-serif-editorial text-lg font-bold text-stone-900">Aggiungi un desiderio</h3>
+              <p class="text-xs text-stone-500 mt-0.5">Inserisci i dettagli per aiutare chi ti farà il regalo.</p>
+            </div>
+            <span class="text-[#C5A059] text-sm">❄</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="md:col-span-3">
+              <label for="gift-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+                Nome del regalo <span class="text-[#6B1D26]">*</span>
+              </label>
+              <input
+                type="text"
+                id="gift-name"
+                placeholder="Es. Maglione in cashmere, Cuffie wireless, Libro illustrato..."
+                required
+                class="w-full px-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
+              />
+            </div>
+
+            <div>
+              <label for="gift-price" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+                Prezzo (€) <span class="text-[#6B1D26]">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-stone-400 text-sm font-medium">€</span>
+                <input
+                  type="number"
+                  id="gift-price"
+                  step="0.01"
+                  min="0"
+                  inputmode="decimal"
+                  placeholder="0.00"
+                  required
+                  class="w-full pl-8 pr-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="gift-details" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+                Dettagli, taglia o colore <span class="text-stone-400 font-normal lowercase tracking-normal">(opzionale)</span>
+              </label>
+              <input
+                type="text"
+                id="gift-details"
+                placeholder="Es. Taglia M, colore verde bosco, edizione rilegata..."
+                class="w-full px-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
+              />
+            </div>
+
+            <div>
+              <label for="gift-link" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+                Link al sito <span class="text-[#173B2B] font-medium lowercase tracking-normal">(consigliato)</span>
+              </label>
+              <input
+                type="url"
+                id="gift-link"
+                placeholder="https://www..."
+                class="w-full px-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2 border-t border-stone-100">
+            <button
+              type="submit"
+              class="w-full sm:w-auto bg-[#173B2B] hover:bg-[#0F291E] text-white text-sm font-semibold px-6 py-3 sm:py-2.5 rounded-lg shadow-xs transition cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>+ Aggiungi alla lista</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-stone-200/90 overflow-hidden">
+          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#FAF7F2] to-white flex justify-between items-center">
+            <h2 class="font-serif-editorial font-bold text-lg text-stone-900">
+              I tuoi desideri · Natale <span id="my-list-year-label">2026</span>
+            </h2>
+            <span id="my-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+          </div>
+          <ul id="my-gifts-container" class="divide-y divide-stone-100">
+            <!-- Elementi generati via JS -->
+          </ul>
+        </div>
+      </section>
+
+      <!-- SEZIONE 2: LISTE DEGLI ALTRI (CON SPUNTE CONDIVISE) -->
+      <section id="section-others-list" class="hidden space-y-6">
+        <div class="bg-white p-5 rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-[#C5A059]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <img
+              src="https://images.unsplash.com/photo-1545048702-79362596cdc9?auto=format&fit=crop&w=200&q=80"
+              alt="Decorazione natalizia"
+              class="w-12 h-12 rounded-lg object-cover border border-stone-200 hidden sm:block"
+            />
+            <div>
+              <h2 class="font-serif-editorial text-lg font-bold text-stone-900">Scegli a chi fare un regalo</h2>
+              <p class="text-xs text-stone-500 mt-0.5">Spunta la casella per prenotare un regalo: tutti (tranne il destinatario) vedranno chi lo acquista.</p>
+            </div>
+          </div>
+          <div class="sm:min-w-[230px]">
+            <select id="other-person-select" class="w-full px-4 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 font-semibold text-stone-800 bg-[#FAF7F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] cursor-pointer">
+              <!-- Popolato con gli altri 21 nomi -->
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-stone-200/90 overflow-hidden">
+          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#3D0D13]/[0.05] to-white flex justify-between items-center">
+            <h3 class="font-serif-editorial font-bold text-lg text-[#3D0D13] flex items-center gap-2">
+              <span>Lista di <span id="selected-other-name"></span></span>
+            </h3>
+            <span id="other-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+          </div>
+          <ul id="other-gifts-container" class="divide-y divide-stone-100">
+            <!-- Elementi generati via JS -->
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 border-t border-stone-200/70 text-center text-xs text-stone-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>Liste di Natale · Edizione Famiglia</span>
+      <span class="text-[#C5A059]">✦ Buone Feste a tutti i 22 partecipanti ✦</span>
+    </footer>
+  </div>
+
+  <!-- SCRIPT PWA + NEVE + CODICE ACCESSO + DATABASE -->
+  <script type="module">
+    // =========================================================================
+    // 0. CODICE D'ACCESSO SEGRETO (25122026)
+    // =========================================================================
+    const CODICE_ACCESSO = "25122026";
+
+    // =========================================================================
+    // 1. REGISTRAZIONE MANIFEST DINAMICO PER INSTALLAZIONE SU TELEFONO (PWA)
+    // =========================================================================
+    (function setupPWAManifest() {
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#3D0D13"/><rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="#C5A059" stroke-width="8"/><path d="M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240" fill="none" stroke="#E8CFA0" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      const iconDataUrl = "data:image/svg+xml," + encodeURIComponent(iconSvg);
+
+      const manifest = {
+        name: "Liste di Natale — Famiglia",
+        short_name: "Liste Natale",
+        start_url: ".",
+        display: "standalone",
+        background_color: "#FAF7F2",
+        theme_color: "#3D0D13",
+        icons: [
+          {
+            src: iconDataUrl,
+            sizes: "512x512",
+            type: "image/svg+xml",
+            purpose: "any maskable"
+          }
+        ]
+      };
+
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+      const manifestUrl = URL.createObjectURL(manifestBlob);
+      const link = document.createElement("link");
+      link.rel = "manifest";
+      link.href = manifestUrl;
+      document.head.appendChild(link);
+    })();
+
+    // =========================================================================
+    // 2. EFFETTO NEVE DELICATO IN BACKGROUND
+    // =========================================================================
+    (function initSnow() {
+      const canvas = document.getElementById('snow-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const flakes = Array.from({ length: 35 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2.2 + 0.8,
+        d: Math.random() * 0.6 + 0.25,
+        drift: Math.random() * 0.4 - 0.2
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(197, 160, 89, 0.28)';
+        ctx.beginPath();
+        for (const f of flakes) {
+          ctx.moveTo(f.x, f.y);
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        for (const f of flakes) {
+          f.y += f.d;
+          f.x += f.drift;
+          if (f.y > height) {
+            f.y = -5;
+            f.x = Math.random() * width;
+          }
+          if (f.x > width) f.x = 0;
+          if (f.x < 0) f.x = width;
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // =========================================================================
+    // 3. CONFIGURAZIONE FIREBASE (PROGETTO NATALE-FAMIGLIA GIÀ COLLEGATO)
+    // =========================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqLyRhVU3Rk_9Z4d-VqHMfOgCmD08QyE0",
+      authDomain: "natale-famiglia.firebaseapp.com",
+      projectId: "natale-famiglia",
+      storageBucket: "natale-famiglia.firebasestorage.app",
+      messagingSenderId: "239854924008",
+      appId: "1:239854924008:web:3fdd01d2710a6ef40a595d"
+    };
+
+    const PARTECIPANTI = [
+      "Laura", "Alessandra", "Marco", "Davide", "Luchino", "Valeria",
+      "Daniela", "Simone", "Daniel", "Ginevra", "Marianna", "Roberto",
+      "Grazia", "Eugenia", "Bianca", "Diego", "Manuela", "Luca",
+      "Matteo", "Ludovica", "Vittoria", "Isabella"
+    ];
+
+    let isGateUnlocked = localStorage.getItem('natale_gate_unlocked') === CODICE_ACCESSO;
+    let currentUser = localStorage.getItem('natale_current_user') || null;
+    let currentYear = document.getElementById('year-select').value;
+    let allData = {};
+    let useFirebase = false;
+    let db = null;
+    let firestoreFns = null;
+
+    // Gestione sblocco Codice d'Accesso
+    document.getElementById('family-code-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('family-code-input');
+      const errorMsg = document.getElementById('family-code-error');
+      const entered = input.value.trim();
+
+      if (entered === CODICE_ACCESSO) {
+        localStorage.setItem('natale_gate_unlocked', CODICE_ACCESSO);
+        isGateUnlocked = true;
+        errorMsg.classList.add('hidden');
+        document.getElementById('gate-screen').classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+        await initStorage();
+      } else {
+        errorMsg.classList.remove('hidden');
+        input.value = '';
+        input.focus();
+      }
+    });
+
+    async function initStorage() {
+      const docId = "liste_" + CODICE_ACCESSO;
+
+      if (firebaseConfig.apiKey && firebaseConfig.projectId) {
+        try {
+          const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+          const { getFirestore, doc, onSnapshot, setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+          const app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          firestoreFns = { doc, onSnapshot, setDoc, docId };
+          useFirebase = true;
+
+          document.getElementById('storage-badge').innerHTML =
+            '<span class="text-[#173B2B] font-semibold">● Sincronizzazione attiva tra tutti i dispositivi</span>';
+
+          onSnapshot(doc(db, "natale", docId), (docSnap) => {
+            if (docSnap.exists()) {
+              allData = docSnap.data().anni || {};
+            } else {
+              allData = {};
+            }
+            renderAll();
+          });
+          return;
+        } catch (err) {
+          console.error("Errore inizializzazione Firebase, passo a locale:", err);
+        }
+      }
+
+      const saved = localStorage.getItem('natale_liste_data');
+      allData = saved ? JSON.parse(saved) : {};
+      renderAll();
+    }
+
+    async function saveData() {
+      if (useFirebase && db && firestoreFns) {
+        await firestoreFns.setDoc(firestoreFns.doc(db, "natale", firestoreFns.docId), {
+          anni: allData
+        });
+      } else {
+        localStorage.setItem('natale_liste_data', JSON.stringify(allData));
+        renderAll();
+      }
+    }
+
+    function renderLoginButtons() {
+      const grid = document.getElementById('names-grid');
+      grid.innerHTML = PARTECIPANTI.map(nome => `
+        <button
+          onclick="login('${nome}')"
+          class="group py-3 px-4 rounded-lg border border-stone-200/90 bg-[#FAF7F2]/60 hover:bg-[#3D0D13] hover:text-white hover:border-[#3D0D13] text-sm font-medium text-stone-800 transition-all duration-150 cursor-pointer flex items-center justify-between shadow-2xs"
+        >
+          <span>${nome}</span>
+          <span class="text-[#C5A059] opacity-60 group-hover:opacity-100 text-xs transition-transform group-hover:translate-x-0.5">→</span>
+        </button>
+      `).join('');
+    }
+
+    window.login = function(nome) {
+      currentUser = nome;
+      localStorage.setItem('natale_current_user', nome);
+      showApp();
+    };
+
+    window.logout = function() {
+      currentUser = null;
+      localStorage.removeItem('natale_current_user');
+      document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+    };
+
+    function showApp() {
+      document.getElementById('gate-screen').classList.add('hidden');
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('hidden');
+      document.getElementById('current-user-name').textContent = currentUser;
+
+      const otherSelect = document.getElementById('other-person-select');
+      const others = PARTECIPANTI.filter(p => p !== currentUser);
+      otherSelect.innerHTML = others.map(p => `<option value="${p}">${p}</option>`).join('');
+
+      renderAll();
+    }
+
+    window.switchTab = function(tab) {
+      const myBtn = document.getElementById('tab-my-list');
+      const otherBtn = document.getElementById('tab-others-list');
+      const mySec = document.getElementById('section-my-list');
+      const otherSec = document.getElementById('section-others-list');
+
+      if (tab === 'my-list') {
+        myBtn.className = "flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg bg-[#FAF7F2] text-[#3D0D13] transition cursor-pointer text-center";
+        otherBtn.className = "flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg text-stone-200 hover:text-white hover:bg-white/10 transition cursor-pointer text-center";
+        mySec.classList.remove('hidden');
+        otherSec.classList.add('hidden');
+      } else {
+        otherBtn.className = "flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg bg-[#FAF7F2] text-[#3D0D13] transition cursor-pointer text-center";
+        myBtn.className = "flex-1 sm:flex-none px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-t-lg text-stone-200 hover:text-white hover:bg-white/10 transition cursor-pointer text-center";
+        otherSec.classList.remove('hidden');
+        mySec.classList.add('hidden');
+        renderOtherList();
+      }
+    };
+
+    function normalizeUrl(rawUrl) {
+      const trimmed = rawUrl.trim();
+      if (!trimmed) return "";
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      return "https://" + trimmed;
+    }
+
+    document.getElementById('add-gift-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const nameInput = document.getElementById('gift-name');
+      const priceInput = document.getElementById('gift-price');
+      const detailsInput = document.getElementById('gift-details');
+      const linkInput = document.getElementById('gift-link');
+
+      const giftName = nameInput.value.trim();
+      const giftPrice = parseFloat(priceInput.value).toFixed(2);
+      const giftDetails = detailsInput.value.trim();
+      const giftLink = normalizeUrl(linkInput.value);
+
+      if (!giftName || isNaN(giftPrice)) return;
+
+      if (!allData[currentYear]) allData[currentYear] = {};
+      if (!allData[currentYear][currentUser]) allData[currentYear][currentUser] = [];
+
+      allData[currentYear][currentUser].push({
+        id: Date.now().toString(),
+        name: giftName,
+        price: giftPrice,
+        details: giftDetails,
+        link: giftLink,
+        claimedBy: null
+      });
+
+      nameInput.value = '';
+      priceInput.value = '';
+      detailsInput.value = '';
+      linkInput.value = '';
+      await saveData();
+    });
+
+    window.deleteMyGift = async function(giftId) {
+      if (!allData[currentYear] || !allData[currentYear][currentUser]) return;
+      allData[currentYear][currentUser] = allData[currentYear][currentUser].filter(g => g.id !== giftId);
+      await saveData();
+    };
+
+    window.toggleClaimGift = async function(targetPerson, giftId) {
+      const list = allData[currentYear]?.[targetPerson] || [];
+      const gift = list.find(g => g.id === giftId);
+      if (!gift) return;
+
+      if (!gift.claimedBy) {
+        gift.claimedBy = currentUser;
+      } else if (gift.claimedBy === currentUser) {
+        gift.claimedBy = null;
+      } else {
+        alert(`Questo regalo è già stato prenotato da ${gift.claimedBy}.`);
+        return;
+      }
+
+      await saveData();
+    };
+
+    function renderMyList() {
+      if (!currentUser) return;
+      document.getElementById('my-list-year-label').textContent = currentYear;
+      const gifts = allData[currentYear]?.[currentUser] || [];
+      document.getElementById('my-gifts-count').textContent = `${gifts.length} ${gifts.length === 1 ? 'articolo' : 'articoli'}`;
+
+      const container = document.getElementById('my-gifts-container');
+      if (gifts.length === 0) {
+        container.innerHTML = `<li class="p-10 text-center text-stone-400 text-sm">Nessun desiderio inserito per Natale ${currentYear}.</li>`;
+        return;
+      }
+
+      container.innerHTML = gifts.map(gift => `
+        <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF7F2]/60 transition">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <p class="font-semibold text-stone-900">${escapeHtml(gift.name)}</p>
+              <span class="text-xs font-semibold text-[#173B2B] bg-[#173B2B]/10 px-2.5 py-0.5 rounded-md">€ ${gift.price}</span>
+            </div>
+            ${gift.details ? `<p class="text-xs text-stone-500">${escapeHtml(gift.details)}</p>` : ''}
+            ${gift.link ? `
+              <div class="pt-0.5">
+                <a href="${escapeAttr(gift.link)}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1 text-xs font-medium text-[#6B1D26] hover:underline">
+                  Vedi articolo sul sito ↗
+                </a>
+              </div>
+            ` : ''}
+          </div>
+          <button
+            onclick="deleteMyGift('${gift.id}')"
+            title="Rimuovi articolo"
+            class="self-start sm:self-center text-xs text-stone-400 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-md font-medium transition cursor-pointer"
+          >
+            Rimuovi
+          </button>
+        </li>
+      `).join('');
+    }
+
+    function renderOtherList() {
+      if (!currentUser) return;
+      const targetPerson = document.getElementById('other-person-select').value;
+      if (!targetPerson) return;
+
+      document.getElementById('selected-other-name').textContent = targetPerson;
+      const gifts = allData[currentYear]?.[targetPerson] || [];
+      document.getElementById('other-gifts-count').textContent = `${gifts.length} ${gifts.length === 1 ? 'articolo' : 'articoli'}`;
+
+      const container = document.getElementById('other-gifts-container');
+      if (gifts.length === 0) {
+        container.innerHTML = `<li class="p-10 text-center text-stone-400 text-sm">${targetPerson} non ha ancora inserito desideri per Natale ${currentYear}.</li>`;
+        return;
+      }
+
+      container.innerHTML = gifts.map(gift => {
+        const isClaimed = Boolean(gift.claimedBy);
+        const isClaimedByMe = gift.claimedBy === currentUser;
+        const disabledAttr = (isClaimed && !isClaimedByMe) ? 'disabled' : '';
+
+        return `
+          <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isClaimed ? 'bg-stone-50/90' : 'hover:bg-[#FAF7F2]/60'} transition">
+            <div class="flex items-start gap-4 flex-1">
+              <input
+                type="checkbox"
+                id="chk-${gift.id}"
+                ${isClaimed ? 'checked' : ''}
+                ${disabledAttr}
+                onchange="toggleClaimGift('${targetPerson}', '${gift.id}')"
+                class="mt-1 w-5 h-5 sm:w-4 sm:h-4 rounded border-stone-300 accent-[#173B2B] cursor-pointer disabled:opacity-50"
+              />
+              <div class="space-y-1 flex-1">
+                <label for="chk-${gift.id}" class="cursor-pointer flex flex-wrap items-center gap-2.5 ${isClaimed ? 'line-through text-stone-400' : 'text-stone-900'}">
+                  <span class="font-semibold">${escapeHtml(gift.name)}</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md ${isClaimed ? 'bg-stone-200/70 text-stone-400' : 'bg-[#173B2B]/10 text-[#173B2B]'}">€ ${gift.price}</span>
+                </label>
+
+                ${gift.details ? `
+                  <p class="text-xs ${isClaimed ? 'text-slate-400' : 'text-stone-500'}">
+                    ${escapeHtml(gift.details)}
+                  </p>
+                ` : ''}
+
+                ${gift.link ? `
+                  <div class="pt-0.5">
+                    <a href="${escapeAttr(gift.link)}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1 text-xs font-medium text-[#6B1D26] hover:underline">
+                      Vedi articolo sul sito ↗
+                    </a>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <div class="self-end sm:self-center">
+              ${isClaimed
+                ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-md border ${isClaimedByMe ? 'bg-[#173B2B] text-white border-[#173B2B]' : 'bg-amber-50 text-amber-900 border-[#C5A059]/40'}">
+                    Regalato da: ${escapeHtml(gift.claimedBy)}
+                   </span>`
+                : `<span class="text-xs text-stone-400 font-medium">Disponibile</span>`
+              }
+            </div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function renderAll() {
+      renderMyList();
+      renderOtherList();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeAttr(str) {
+      return String(str).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    document.getElementById('year-select').addEventListener('change', (e) => {
+      currentYear = e.target.value;
+      renderAll();
+    });
+
+    document.getElementById('other-person-select').addEventListener('change', () => {
+      renderOtherList();
+    });
+
+    // Avvio flusso: Gate Codice Accesso -> Selezione Nome -> App
+    renderLoginButtons();
+    if (isGateUnlocked) {
+      document.getElementById('gate-screen').classList.add('hidden');
+      await initStorage();
+      if (currentUser && PARTECIPANTI.includes(currentUser)) {
+        showApp();
+      } else {
+        document.getElementById('login-screen').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
