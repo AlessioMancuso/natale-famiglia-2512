@@ -323,15 +323,9 @@
       </div>
       <form id="edit-gift-form" class="p-6 space-y-4">
         <input type="hidden" id="edit-gift-id" />
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Nome del regalo *</label>
-            <input type="text" id="edit-gift-name" required class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Prezzo (€) *</label>
-            <input type="number" id="edit-gift-price" step="0.01" min="0" inputmode="decimal" required class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
-          </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Nome del regalo *</label>
+          <input type="text" id="edit-gift-name" required class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
         </div>
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Dettagli, taglia o colore</label>
@@ -341,10 +335,6 @@
           <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Link al sito</label>
           <input type="url" id="edit-gift-link" placeholder="https://www..." class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
         </div>
-        <label class="flex items-center gap-2.5 p-3 rounded-lg bg-[#FAF7F2] border border-[#C5A059]/30 cursor-pointer">
-          <input type="checkbox" id="edit-gift-priority" class="w-4 h-4 accent-[#C5A059] rounded" />
-          <span class="text-xs font-semibold text-stone-800">⭐ Segna come desiderio preferito ("Lo vorrei tantissimo")</span>
-        </label>
         <div class="flex gap-2.5 pt-2">
           <button type="button" onclick="closeEditModal()" class="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold text-stone-600 cursor-pointer">Annulla</button>
           <button type="submit" class="flex-1 py-2.5 rounded-xl bg-[#173B2B] hover:bg-[#0F291E] text-white text-xs font-semibold cursor-pointer">Salva Modifiche</button>
@@ -464,38 +454,17 @@
             <span class="text-[#C5A059] text-sm">❄</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="md:col-span-3">
-              <label for="gift-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
-                Nome del regalo <span class="text-[#6B1D26]">*</span>
-              </label>
-              <input
-                type="text"
-                id="gift-name"
-                placeholder="Es. Maglione in cashmere, Cuffie wireless, Libro illustrato..."
-                required
-                class="w-full px-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
-              />
-            </div>
-
-            <div>
-              <label for="gift-price" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
-                Prezzo (€) <span class="text-[#6B1D26]">*</span>
-              </label>
-              <div class="relative">
-                <span class="absolute left-3.5 top-2.5 text-stone-400 text-sm font-medium">€</span>
-                <input
-                  type="number"
-                  id="gift-price"
-                  step="0.01"
-                  min="0"
-                  inputmode="decimal"
-                  placeholder="0.00"
-                  required
-                  class="w-full pl-8 pr-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
-                />
-              </div>
-            </div>
+          <div>
+            <label for="gift-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+              Nome del regalo <span class="text-[#6B1D26]">*</span>
+            </label>
+            <input
+              type="text"
+              id="gift-name"
+              placeholder="Es. Maglione in cashmere, Cuffie wireless, Libro illustrato..."
+              required
+              class="w-full px-3.5 py-2.5 text-base sm:text-sm rounded-lg border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/20 focus:border-[#6B1D26] transition"
+            />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -524,12 +493,7 @@
             </div>
           </div>
 
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-stone-100">
-            <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
-              <input type="checkbox" id="gift-priority" class="w-4 h-4 accent-[#C5A059] rounded cursor-pointer" />
-              <span class="text-xs font-semibold text-stone-700">⭐ Segna come preferito ("Lo vorrei tantissimo")</span>
-            </label>
-
+          <div class="flex justify-end pt-2 border-t border-stone-100">
             <button
               type="submit"
               class="w-full sm:w-auto bg-[#173B2B] hover:bg-[#0F291E] text-white text-sm font-semibold px-6 py-3 sm:py-2.5 rounded-lg shadow-xs transition cursor-pointer flex items-center justify-center gap-2"
@@ -1033,18 +997,14 @@
       if (!currentUser) return;
 
       const nameInput = document.getElementById('gift-name');
-      const priceInput = document.getElementById('gift-price');
       const detailsInput = document.getElementById('gift-details');
       const linkInput = document.getElementById('gift-link');
-      const priorityInput = document.getElementById('gift-priority');
 
       const giftName = nameInput.value.trim();
-      const giftPrice = parseFloat(priceInput.value).toFixed(2);
       const giftDetails = detailsInput.value.trim();
       const giftLink = normalizeUrl(linkInput.value);
-      const isPriority = priorityInput.checked;
 
-      if (!giftName || isNaN(giftPrice)) return;
+      if (!giftName) return;
 
       if (!allData[currentYear]) allData[currentYear] = {};
       if (!allData[currentYear][currentUser]) allData[currentYear][currentUser] = [];
@@ -1052,18 +1012,14 @@
       allData[currentYear][currentUser].push({
         id: Date.now().toString(),
         name: giftName,
-        price: giftPrice,
         details: giftDetails,
         link: giftLink,
-        priority: isPriority,
         claimedBy: null
       });
 
       nameInput.value = '';
-      priceInput.value = '';
       detailsInput.value = '';
       linkInput.value = '';
-      priorityInput.checked = false;
       await saveData();
     });
 
@@ -1074,10 +1030,8 @@
 
       document.getElementById('edit-gift-id').value = gift.id;
       document.getElementById('edit-gift-name').value = gift.name;
-      document.getElementById('edit-gift-price').value = gift.price;
       document.getElementById('edit-gift-details').value = gift.details || '';
       document.getElementById('edit-gift-link').value = gift.link || '';
-      document.getElementById('edit-gift-priority').checked = Boolean(gift.priority);
 
       document.getElementById('edit-gift-modal').classList.remove('hidden');
     };
@@ -1094,10 +1048,8 @@
       if (!gift) return;
 
       gift.name = document.getElementById('edit-gift-name').value.trim();
-      gift.price = parseFloat(document.getElementById('edit-gift-price').value).toFixed(2);
       gift.details = document.getElementById('edit-gift-details').value.trim();
       gift.link = normalizeUrl(document.getElementById('edit-gift-link').value);
-      gift.priority = document.getElementById('edit-gift-priority').checked;
 
       closeEditModal();
       await saveData();
@@ -1118,7 +1070,7 @@
       }
 
       const lines = gifts.map((g, idx) => {
-        let line = `${idx + 1}. ${g.priority ? '⭐ ' : ''}${g.name} (€ ${g.price})`;
+        let line = `${idx + 1}. ${g.name}`;
         if (g.details) line += ` — ${g.details}`;
         if (g.link) line += `\n   🔗 ${g.link}`;
         return line;
@@ -1163,7 +1115,7 @@
       pendingClaimContext = { targetPerson, giftId };
       document.getElementById('claim-modal-title').textContent = gift.name;
       document.getElementById('claim-modal-desc').innerHTML =
-        `Confermi di voler prenotare <strong>${escapeHtml(gift.name)}</strong> (€ ${gift.price}) dalla lista di <strong>${escapeHtml(targetPerson)}</strong>?`;
+        `Confermi di voler prenotare <strong>${escapeHtml(gift.name)}</strong> dalla lista di <strong>${escapeHtml(targetPerson)}</strong>?`;
       document.getElementById('claim-modal').classList.remove('hidden');
     };
 
@@ -1186,16 +1138,12 @@
     };
 
     // =========================================================================
-    // 7. RENDERING LISTE (CON AGGIORNAMENTO IMMEDIATO DEL FILTRO)
+    // 7. RENDERING LISTE
     // =========================================================================
-    function sortByPriority(gifts) {
-      return [...gifts].sort((a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0));
-    }
-
     function renderMyList() {
       if (!currentUser) return;
       document.getElementById('my-list-year-label').textContent = currentYear;
-      const gifts = sortByPriority(allData[currentYear]?.[currentUser] || []);
+      const gifts = allData[currentYear]?.[currentUser] || [];
       document.getElementById('my-gifts-count').textContent = `${gifts.length} ${gifts.length === 1 ? 'articolo' : 'articoli'}`;
 
       const container = document.getElementById('my-gifts-container');
@@ -1205,12 +1153,10 @@
       }
 
       container.innerHTML = gifts.map(gift => `
-        <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${gift.priority ? 'bg-[#C5A059]/[0.06]' : 'hover:bg-[#FAF7F2]/60'} transition">
+        <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF7F2]/60 transition">
           <div class="space-y-1">
             <div class="flex flex-wrap items-center gap-2">
-              ${gift.priority ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 border border-[#C5A059]/40 px-2 py-0.5 rounded-md">⭐ Preferito</span>` : ''}
               <p class="font-semibold text-stone-900">${escapeHtml(gift.name)}</p>
-              <span class="text-xs font-semibold text-[#173B2B] bg-[#173B2B]/10 px-2.5 py-0.5 rounded-md">€ ${gift.price}</span>
             </div>
             ${gift.details ? `<p class="text-xs text-stone-500">${escapeHtml(gift.details)}</p>` : ''}
             ${gift.link ? `
@@ -1251,7 +1197,7 @@
       const filterCheckbox = document.getElementById('filter-available-only');
       const onlyAvailable = Boolean(filterCheckbox && filterCheckbox.checked);
 
-      const allPersonGifts = sortByPriority(allData[currentYear]?.[targetPerson] || []);
+      const allPersonGifts = allData[currentYear]?.[targetPerson] || [];
       const gifts = onlyAvailable
         ? allPersonGifts.filter(g => !g.claimedBy)
         : allPersonGifts;
@@ -1270,7 +1216,7 @@
         const canInteract = !isClaimed || isClaimedByMe;
 
         return `
-          <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isClaimed ? 'bg-stone-50/90' : (gift.priority ? 'bg-[#C5A059]/[0.05]' : 'hover:bg-[#FAF7F2]/60')} transition">
+          <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isClaimed ? 'bg-stone-50/90' : 'hover:bg-[#FAF7F2]/60'} transition">
             <div class="flex items-start gap-4 flex-1">
               <input
                 type="checkbox"
@@ -1282,9 +1228,7 @@
               />
               <div class="space-y-1 flex-1">
                 <div onclick="if(${canInteract}) handleGiftClick('${targetPerson}', '${gift.id}')" class="${canInteract ? 'cursor-pointer' : ''} flex flex-wrap items-center gap-2 ${isClaimed ? 'line-through text-stone-400' : 'text-stone-900'}">
-                  ${gift.priority ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 border border-[#C5A059]/40 px-2 py-0.5 rounded-md no-underline">⭐ Preferito</span>` : ''}
                   <span class="font-semibold">${escapeHtml(gift.name)}</span>
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md ${isClaimed ? 'bg-stone-200/70 text-stone-400' : 'bg-[#173B2B]/10 text-[#173B2B]'}">€ ${gift.price}</span>
                 </div>
 
                 ${gift.details ? `
