@@ -174,8 +174,15 @@
           <!-- I 22 nomi vengono generati qui via JS -->
         </div>
 
-        <div id="storage-badge" class="mt-8 pt-5 border-t border-stone-100 text-center text-xs text-stone-400 tracking-wide">
-          Connessione al database di famiglia...
+        <div class="mt-8 pt-5 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-stone-400 tracking-wide">
+          <div id="storage-badge">Connessione al database di famiglia...</div>
+          <button
+            type="button"
+            onclick="openAdminModal()"
+            class="text-stone-400 hover:text-[#6B1D26] transition underline-offset-2 hover:underline cursor-pointer"
+          >
+            PIN dimenticato? (Admin)
+          </button>
         </div>
       </div>
     </div>
@@ -259,6 +266,113 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODALE ADMIN: RESET PIN FAMILIARI -->
+  <div id="admin-modal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div class="bg-white max-w-md w-full rounded-2xl shadow-2xl border border-[#C5A059]/40 overflow-hidden">
+      <div class="bg-[#3D0D13] px-6 py-5 text-white flex items-center justify-between">
+        <div>
+          <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E8CFA0]">Area Organizzatore</p>
+          <h3 class="font-serif-editorial text-xl font-bold mt-0.5">Reset PIN Familiari</h3>
+        </div>
+        <button type="button" onclick="closeAdminModal()" class="text-white/70 hover:text-white text-xl leading-none px-2 py-1 cursor-pointer">✕</button>
+      </div>
+      <div class="h-1 w-full bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
+
+      <form id="admin-auth-form" class="p-6 space-y-4">
+        <p class="text-xs text-stone-600 leading-relaxed">
+          Inserisci il <strong>Codice Amministratore</strong> per sbloccare la gestione dei PIN dei partecipanti.
+        </p>
+        <input
+          type="password"
+          id="admin-code-input"
+          inputmode="numeric"
+          maxlength="8"
+          placeholder="••••"
+          required
+          class="w-full px-4 py-3 text-center text-xl tracking-[0.4em] font-bold rounded-xl border border-stone-300 bg-[#FAF7F2]/60 focus:bg-white focus:outline-none focus:border-[#6B1D26]"
+        />
+        <p id="admin-error-msg" class="hidden text-xs text-red-700 font-medium text-center">Codice amministratore non valido.</p>
+        <div class="flex gap-2.5">
+          <button type="button" onclick="closeAdminModal()" class="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold text-stone-600 cursor-pointer">Annulla</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-[#3D0D13] text-white text-xs font-semibold cursor-pointer">Accedi →</button>
+        </div>
+      </form>
+
+      <div id="admin-panel-content" class="hidden p-6 space-y-4">
+        <p class="text-xs text-stone-600 leading-relaxed">
+          Tocca <strong>Azzera PIN</strong> accanto a chi lo ha dimenticato: al prossimo accesso potrà sceglierne uno nuovo.
+        </p>
+        <div id="admin-users-list" class="max-h-72 overflow-y-auto divide-y divide-stone-100 border border-stone-200 rounded-xl"></div>
+        <button type="button" onclick="closeAdminModal()" class="w-full py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-xs font-semibold text-stone-700 cursor-pointer">Chiudi Pannello</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE MODIFICA DESIDERIO (LA MIA LISTA) -->
+  <div id="edit-gift-modal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-2xl border border-[#C5A059]/40 overflow-hidden">
+      <div class="bg-[#173B2B] px-6 py-4 text-white flex items-center justify-between">
+        <div>
+          <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E8CFA0]">Aggiorna Desiderio</p>
+          <h3 class="font-serif-editorial text-lg font-bold">Modifica Regalo</h3>
+        </div>
+        <button type="button" onclick="closeEditModal()" class="text-white/70 hover:text-white text-xl leading-none px-2 py-1 cursor-pointer">✕</button>
+      </div>
+      <form id="edit-gift-form" class="p-6 space-y-4">
+        <input type="hidden" id="edit-gift-id" />
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Nome del regalo *</label>
+            <input type="text" id="edit-gift-name" required class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Prezzo (€) *</label>
+            <input type="number" id="edit-gift-price" step="0.01" min="0" inputmode="decimal" required class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Dettagli, taglia o colore</label>
+          <input type="text" id="edit-gift-details" class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Link al sito</label>
+          <input type="url" id="edit-gift-link" placeholder="https://www..." class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:border-[#173B2B]" />
+        </div>
+        <label class="flex items-center gap-2.5 p-3 rounded-lg bg-[#FAF7F2] border border-[#C5A059]/30 cursor-pointer">
+          <input type="checkbox" id="edit-gift-priority" class="w-4 h-4 accent-[#C5A059] rounded" />
+          <span class="text-xs font-semibold text-stone-800">⭐ Segna come desiderio preferito ("Lo vorrei tantissimo")</span>
+        </label>
+        <div class="flex gap-2.5 pt-2">
+          <button type="button" onclick="closeEditModal()" class="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold text-stone-600 cursor-pointer">Annulla</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-[#173B2B] hover:bg-[#0F291E] text-white text-xs font-semibold cursor-pointer">Salva Modifiche</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE CONFERMA PRENOTAZIONE -->
+  <div id="claim-modal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div class="bg-white max-w-sm w-full rounded-2xl shadow-2xl border border-[#C5A059]/40 overflow-hidden">
+      <div class="bg-[#3D0D13] px-6 py-4 text-white flex items-center justify-between">
+        <div>
+          <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E8CFA0]">Conferma Regalo</p>
+          <h3 id="claim-modal-title" class="font-serif-editorial text-lg font-bold">Prenota Regalo</h3>
+        </div>
+        <button type="button" onclick="closeClaimModal()" class="text-white/70 hover:text-white text-xl leading-none px-2 py-1 cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <p id="claim-modal-desc" class="text-xs text-stone-600 leading-relaxed"></p>
+        <p class="text-[11px] text-stone-500">
+          Tutti gli altri familiari vedranno che hai prenotato tu questo regalo, mentre il destinatario non saprà nulla.
+        </p>
+        <div class="flex gap-2.5 pt-1">
+          <button type="button" onclick="closeClaimModal()" class="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold text-stone-600 cursor-pointer">Annulla</button>
+          <button type="button" onclick="confirmClaimAction()" class="flex-1 py-2.5 rounded-xl bg-[#173B2B] hover:bg-[#0F291E] text-white text-xs font-semibold cursor-pointer">Conferma Spunta ✓</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -410,7 +524,12 @@
             </div>
           </div>
 
-          <div class="flex justify-end pt-2 border-t border-stone-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-stone-100">
+            <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+              <input type="checkbox" id="gift-priority" class="w-4 h-4 accent-[#C5A059] rounded cursor-pointer" />
+              <span class="text-xs font-semibold text-stone-700">⭐ Segna come preferito ("Lo vorrei tantissimo")</span>
+            </label>
+
             <button
               type="submit"
               class="w-full sm:w-auto bg-[#173B2B] hover:bg-[#0F291E] text-white text-sm font-semibold px-6 py-3 sm:py-2.5 rounded-lg shadow-xs transition cursor-pointer flex items-center justify-center gap-2"
@@ -421,11 +540,22 @@
         </form>
 
         <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-stone-200/90 overflow-hidden">
-          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#FAF7F2] to-white flex justify-between items-center">
-            <h2 class="font-serif-editorial font-bold text-lg text-stone-900">
-              I tuoi desideri · Natale <span id="my-list-year-label">2026</span>
-            </h2>
-            <span id="my-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#FAF7F2] to-white flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-2.5">
+              <h2 class="font-serif-editorial font-bold text-lg text-stone-900">
+                I tuoi desideri · Natale <span id="my-list-year-label">2026</span>
+              </h2>
+              <span id="my-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+            </div>
+
+            <button
+              type="button"
+              onclick="shareMyList()"
+              id="share-list-btn"
+              class="text-xs font-semibold text-[#173B2B] hover:bg-[#173B2B]/10 border border-[#173B2B]/25 px-3 py-1.5 rounded-lg transition cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <span>📤 Condividi lista</span>
+            </button>
           </div>
           <ul id="my-gifts-container" class="divide-y divide-stone-100">
             <!-- Elementi generati via JS -->
@@ -455,11 +585,18 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-[0_2px_14px_rgba(0,0,0,0.03)] border border-stone-200/90 overflow-hidden">
-          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#3D0D13]/[0.05] to-white flex justify-between items-center">
-            <h3 class="font-serif-editorial font-bold text-lg text-[#3D0D13] flex items-center gap-2">
-              <span>Lista di <span id="selected-other-name"></span></span>
-            </h3>
-            <span id="other-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+          <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-gradient-to-r from-[#3D0D13]/[0.05] to-white flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-2.5">
+              <h3 class="font-serif-editorial font-bold text-lg text-[#3D0D13]">
+                Lista di <span id="selected-other-name"></span>
+              </h3>
+              <span id="other-gifts-count" class="text-xs font-semibold bg-[#3D0D13]/10 text-[#3D0D13] px-3 py-1 rounded-full">0 articoli</span>
+            </div>
+
+            <label class="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 cursor-pointer select-none bg-white px-3 py-1.5 rounded-lg border border-stone-200">
+              <input type="checkbox" id="filter-available-only" onchange="renderOtherList()" class="w-3.5 h-3.5 accent-[#173B2B] rounded cursor-pointer" />
+              <span>Solo disponibili</span>
+            </label>
           </div>
           <ul id="other-gifts-container" class="divide-y divide-stone-100">
             <!-- Elementi generati via JS -->
@@ -478,9 +615,10 @@
   <!-- SCRIPT PWA + NEVE + CODICE ACCESSO + PIN PERSONALI + DATABASE -->
   <script type="module">
     // =========================================================================
-    // 0. CODICE D'ACCESSO SEGRETO FAMIGLIA (25122026)
+    // 0. CODICE D'ACCESSO FAMIGLIA E CODICE ADMIN RESET PIN
     // =========================================================================
     const CODICE_ACCESSO = "25122026";
+    const CODICE_ADMIN = "9999";
 
     // =========================================================================
     // 1. REGISTRAZIONE MANIFEST DINAMICO PER INSTALLAZIONE SU TELEFONO (PWA)
@@ -584,9 +722,10 @@
     let currentUser = localStorage.getItem('natale_current_user') || null;
     let currentYear = document.getElementById('year-select').value;
     let allData = {};
-    let userPins = {}; // Mappa { "Luca": "1234", ... }
+    let userPins = {};
     let pendingUserLogin = null;
     let isCreatingPin = false;
+    let pendingClaimContext = null;
 
     let useFirebase = false;
     let db = null;
@@ -639,6 +778,7 @@
               userPins = {};
             }
             renderLoginButtons();
+            renderAdminUsersList();
             renderAll();
           });
           return;
@@ -652,6 +792,7 @@
       allData = saved ? JSON.parse(saved) : {};
       userPins = savedPins ? JSON.parse(savedPins) : {};
       renderLoginButtons();
+      renderAdminUsersList();
       renderAll();
     }
 
@@ -665,6 +806,7 @@
         localStorage.setItem('natale_liste_data', JSON.stringify(allData));
         localStorage.setItem('natale_user_pins', JSON.stringify(userPins));
         renderLoginButtons();
+        renderAdminUsersList();
         renderAll();
       }
     }
@@ -688,7 +830,7 @@
     }
 
     // =========================================================================
-    // 4. GESTIONE MODALE PIN PERSONALE (CREAZIONE E VERIFICA)
+    // 4. GESTIONE MODALE PIN PERSONALE + ADMIN RESET PIN
     // =========================================================================
     window.requestUserLogin = function(nome) {
       pendingUserLogin = nome;
@@ -713,7 +855,7 @@
 
       if (isCreatingPin) {
         badge.textContent = "Primo Accesso · Crea il tuo PIN";
-        desc.innerHTML = `Ciao <strong>${nome}</strong>! Scegli un <strong>PIN segreto di 4 cifre</strong> (es. anno di nascita o 4 numeri a tua scelta). Ti servirà ogni volta che entri nel tuo profilo, così nessuno potrà sbirciare la tua lista.`;
+        desc.innerHTML = `Ciao <strong>${nome}</strong>! Scegli un <strong>PIN segreto di 4 cifre</strong>. Ti servirà ogni volta che entri nel tuo profilo, così nessuno potrà sbirciare la tua lista.`;
         label.textContent = "Scegli un PIN di 4 cifre";
         confirmWrapper.classList.remove('hidden');
         confirmInput.required = true;
@@ -780,6 +922,55 @@
       }
     });
 
+    // Pannello Admin Reset PIN
+    window.openAdminModal = function() {
+      document.getElementById('admin-code-input').value = '';
+      document.getElementById('admin-error-msg').classList.add('hidden');
+      document.getElementById('admin-auth-form').classList.remove('hidden');
+      document.getElementById('admin-panel-content').classList.add('hidden');
+      document.getElementById('admin-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('admin-code-input').focus(), 50);
+    };
+
+    window.closeAdminModal = function() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    };
+
+    document.getElementById('admin-auth-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = document.getElementById('admin-code-input').value.trim();
+      if (val === CODICE_ADMIN) {
+        document.getElementById('admin-auth-form').classList.add('hidden');
+        document.getElementById('admin-panel-content').classList.remove('hidden');
+        renderAdminUsersList();
+      } else {
+        document.getElementById('admin-error-msg').classList.remove('hidden');
+      }
+    });
+
+    function renderAdminUsersList() {
+      const container = document.getElementById('admin-users-list');
+      if (!container) return;
+      container.innerHTML = PARTECIPANTI.map(nome => {
+        const hasPin = Boolean(userPins[nome]);
+        return `
+          <div class="px-4 py-2.5 flex items-center justify-between text-xs">
+            <span class="font-semibold text-stone-800">${nome}</span>
+            ${hasPin
+              ? `<button type="button" onclick="resetUserPin('${nome}')" class="text-red-700 hover:bg-red-50 border border-red-200 px-2.5 py-1 rounded-md font-semibold cursor-pointer">Azzera PIN</button>`
+              : `<span class="text-stone-400">Non ancora impostato</span>`
+            }
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.resetUserPin = async function(nome) {
+      if (!confirm(`Vuoi davvero azzerare il PIN di ${nome}? Al prossimo accesso potrà impostarne uno nuovo.`)) return;
+      delete userPins[nome];
+      await saveData();
+    };
+
     function completeLogin(nome) {
       currentUser = nome;
       localStorage.setItem('natale_current_user', nome);
@@ -834,6 +1025,9 @@
       return "https://" + trimmed;
     }
 
+    // =========================================================================
+    // 5. GESTIONE AGGIUNTA, MODIFICA, ELIMINAZIONE E CONDIVISIONE LISTA
+    // =========================================================================
     document.getElementById('add-gift-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser) return;
@@ -842,11 +1036,13 @@
       const priceInput = document.getElementById('gift-price');
       const detailsInput = document.getElementById('gift-details');
       const linkInput = document.getElementById('gift-link');
+      const priorityInput = document.getElementById('gift-priority');
 
       const giftName = nameInput.value.trim();
       const giftPrice = parseFloat(priceInput.value).toFixed(2);
       const giftDetails = detailsInput.value.trim();
       const giftLink = normalizeUrl(linkInput.value);
+      const isPriority = priorityInput.checked;
 
       if (!giftName || isNaN(giftPrice)) return;
 
@@ -859,6 +1055,7 @@
         price: giftPrice,
         details: giftDetails,
         link: giftLink,
+        priority: isPriority,
         claimedBy: null
       });
 
@@ -866,36 +1063,142 @@
       priceInput.value = '';
       detailsInput.value = '';
       linkInput.value = '';
+      priorityInput.checked = false;
+      await saveData();
+    });
+
+    window.openEditModal = function(giftId) {
+      const gifts = allData[currentYear]?.[currentUser] || [];
+      const gift = gifts.find(g => g.id === giftId);
+      if (!gift) return;
+
+      document.getElementById('edit-gift-id').value = gift.id;
+      document.getElementById('edit-gift-name').value = gift.name;
+      document.getElementById('edit-gift-price').value = gift.price;
+      document.getElementById('edit-gift-details').value = gift.details || '';
+      document.getElementById('edit-gift-link').value = gift.link || '';
+      document.getElementById('edit-gift-priority').checked = Boolean(gift.priority);
+
+      document.getElementById('edit-gift-modal').classList.remove('hidden');
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('edit-gift-modal').classList.add('hidden');
+    };
+
+    document.getElementById('edit-gift-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const giftId = document.getElementById('edit-gift-id').value;
+      const gifts = allData[currentYear]?.[currentUser] || [];
+      const gift = gifts.find(g => g.id === giftId);
+      if (!gift) return;
+
+      gift.name = document.getElementById('edit-gift-name').value.trim();
+      gift.price = parseFloat(document.getElementById('edit-gift-price').value).toFixed(2);
+      gift.details = document.getElementById('edit-gift-details').value.trim();
+      gift.link = normalizeUrl(document.getElementById('edit-gift-link').value);
+      gift.priority = document.getElementById('edit-gift-priority').checked;
+
+      closeEditModal();
       await saveData();
     });
 
     window.deleteMyGift = async function(giftId) {
+      if (!confirm("Rimuovere questo regalo dalla tua lista?")) return;
       if (!allData[currentYear] || !allData[currentYear][currentUser]) return;
       allData[currentYear][currentUser] = allData[currentYear][currentUser].filter(g => g.id !== giftId);
       await saveData();
     };
 
-    window.toggleClaimGift = async function(targetPerson, giftId) {
+    window.shareMyList = async function() {
+      const gifts = allData[currentYear]?.[currentUser] || [];
+      if (gifts.length === 0) {
+        alert("La tua lista è ancora vuota!");
+        return;
+      }
+
+      const lines = gifts.map((g, idx) => {
+        let line = `${idx + 1}. ${g.priority ? '⭐ ' : ''}${g.name} (€ ${g.price})`;
+        if (g.details) line += ` — ${g.details}`;
+        if (g.link) line += `\n   🔗 ${g.link}`;
+        return line;
+      });
+
+      const shareText = `🎄 *Lista di Natale ${currentYear} di ${currentUser}* 🎁\n\n${lines.join('\n')}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: `Lista di Natale di ${currentUser}`, text: shareText });
+          return;
+        } catch (_) {}
+      }
+
+      await navigator.clipboard.writeText(shareText);
+      const btn = document.getElementById('share-list-btn');
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span>✓ Copiata negli appunti!</span>';
+      setTimeout(() => { btn.innerHTML = original; }, 2500);
+    };
+
+    // =========================================================================
+    // 6. PRENOTAZIONE CON CONFERMA SINGOLA
+    // =========================================================================
+    window.handleGiftClick = async function(targetPerson, giftId) {
       const list = allData[currentYear]?.[targetPerson] || [];
       const gift = list.find(g => g.id === giftId);
       if (!gift) return;
 
-      if (!gift.claimedBy) {
-        gift.claimedBy = currentUser;
-      } else if (gift.claimedBy === currentUser) {
+      // Se l'utente corrente ha già prenotato questo regalo, chiede conferma per annullare
+      if (gift.claimedBy === currentUser) {
+        if (!confirm(`Vuoi annullare la tua prenotazione per "${gift.name}"?`)) return;
         gift.claimedBy = null;
-      } else {
+        await saveData();
+        return;
+      }
+
+      // Se già prenotato da qualcun altro
+      if (gift.claimedBy) {
         alert(`Questo regalo è già stato prenotato da ${gift.claimedBy}.`);
         return;
       }
 
+      // Altrimenti apri la modale di conferma
+      pendingClaimContext = { targetPerson, giftId };
+      document.getElementById('claim-modal-title').textContent = gift.name;
+      document.getElementById('claim-modal-desc').innerHTML =
+        `Confermi di voler prenotare <strong>${escapeHtml(gift.name)}</strong> (€ ${gift.price}) dalla lista di <strong>${escapeHtml(targetPerson)}</strong>?`;
+      document.getElementById('claim-modal').classList.remove('hidden');
+    };
+
+    window.closeClaimModal = function() {
+      pendingClaimContext = null;
+      document.getElementById('claim-modal').classList.add('hidden');
+    };
+
+    window.confirmClaimAction = async function() {
+      if (!pendingClaimContext) return;
+      const { targetPerson, giftId } = pendingClaimContext;
+      const list = allData[currentYear]?.[targetPerson] || [];
+      const gift = list.find(g => g.id === giftId);
+      if (!gift) return;
+
+      gift.claimedBy = currentUser;
+
+      closeClaimModal();
       await saveData();
     };
+
+    // =========================================================================
+    // 7. RENDERING LISTE
+    // =========================================================================
+    function sortByPriority(gifts) {
+      return [...gifts].sort((a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0));
+    }
 
     function renderMyList() {
       if (!currentUser) return;
       document.getElementById('my-list-year-label').textContent = currentYear;
-      const gifts = allData[currentYear]?.[currentUser] || [];
+      const gifts = sortByPriority(allData[currentYear]?.[currentUser] || []);
       document.getElementById('my-gifts-count').textContent = `${gifts.length} ${gifts.length === 1 ? 'articolo' : 'articoli'}`;
 
       const container = document.getElementById('my-gifts-container');
@@ -905,9 +1208,10 @@
       }
 
       container.innerHTML = gifts.map(gift => `
-        <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF7F2]/60 transition">
+        <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${gift.priority ? 'bg-[#C5A059]/[0.06]' : 'hover:bg-[#FAF7F2]/60'} transition">
           <div class="space-y-1">
-            <div class="flex flex-wrap items-center gap-2.5">
+            <div class="flex flex-wrap items-center gap-2">
+              ${gift.priority ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 border border-[#C5A059]/40 px-2 py-0.5 rounded-md">⭐ Preferito</span>` : ''}
               <p class="font-semibold text-stone-900">${escapeHtml(gift.name)}</p>
               <span class="text-xs font-semibold text-[#173B2B] bg-[#173B2B]/10 px-2.5 py-0.5 rounded-md">€ ${gift.price}</span>
             </div>
@@ -921,13 +1225,22 @@
               </div>
             ` : ''}
           </div>
-          <button
-            onclick="deleteMyGift('${gift.id}')"
-            title="Rimuovi articolo"
-            class="self-start sm:self-center text-xs text-stone-400 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-md font-medium transition cursor-pointer"
-          >
-            Rimuovi
-          </button>
+          <div class="flex items-center gap-1.5 self-start sm:self-center">
+            <button
+              onclick="openEditModal('${gift.id}')"
+              title="Modifica articolo"
+              class="text-xs text-stone-600 hover:text-[#173B2B] hover:bg-[#173B2B]/10 px-3 py-1.5 rounded-md font-medium transition cursor-pointer"
+            >
+              ✏️ Modifica
+            </button>
+            <button
+              onclick="deleteMyGift('${gift.id}')"
+              title="Rimuovi articolo"
+              class="text-xs text-stone-400 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-md font-medium transition cursor-pointer"
+            >
+              Rimuovi
+            </button>
+          </div>
         </li>
       `).join('');
     }
@@ -938,36 +1251,43 @@
       if (!targetPerson) return;
 
       document.getElementById('selected-other-name').textContent = targetPerson;
-      const gifts = allData[currentYear]?.[targetPerson] || [];
+      const onlyAvailable = document.getElementById('filter-available-only')?.checked;
+      let gifts = sortByPriority(allData[currentYear]?.[targetPerson] || []);
+
+      if (onlyAvailable) {
+        gifts = gifts.filter(g => !g.claimedBy);
+      }
+
       document.getElementById('other-gifts-count').textContent = `${gifts.length} ${gifts.length === 1 ? 'articolo' : 'articoli'}`;
 
       const container = document.getElementById('other-gifts-container');
       if (gifts.length === 0) {
-        container.innerHTML = `<li class="p-10 text-center text-stone-400 text-sm">${targetPerson} non ha ancora inserito desideri per Natale ${currentYear}.</li>`;
+        container.innerHTML = `<li class="p-10 text-center text-stone-400 text-sm">${onlyAvailable ? 'Nessun regalo disponibile con questo filtro.' : `${targetPerson} non ha ancora inserito desideri per Natale ${currentYear}.`}</li>`;
         return;
       }
 
       container.innerHTML = gifts.map(gift => {
         const isClaimed = Boolean(gift.claimedBy);
         const isClaimedByMe = gift.claimedBy === currentUser;
-        const disabledAttr = (isClaimed && !isClaimedByMe) ? 'disabled' : '';
+        const canInteract = !isClaimed || isClaimedByMe;
 
         return `
-          <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isClaimed ? 'bg-stone-50/90' : 'hover:bg-[#FAF7F2]/60'} transition">
+          <li class="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isClaimed ? 'bg-stone-50/90' : (gift.priority ? 'bg-[#C5A059]/[0.05]' : 'hover:bg-[#FAF7F2]/60')} transition">
             <div class="flex items-start gap-4 flex-1">
               <input
                 type="checkbox"
                 id="chk-${gift.id}"
                 ${isClaimed ? 'checked' : ''}
-                ${disabledAttr}
-                onchange="toggleClaimGift('${targetPerson}', '${gift.id}')"
+                ${!canInteract ? 'disabled' : ''}
+                onclick="event.preventDefault(); handleGiftClick('${targetPerson}', '${gift.id}')"
                 class="mt-1 w-5 h-5 sm:w-4 sm:h-4 rounded border-stone-300 accent-[#173B2B] cursor-pointer disabled:opacity-50"
               />
               <div class="space-y-1 flex-1">
-                <label for="chk-${gift.id}" class="cursor-pointer flex flex-wrap items-center gap-2.5 ${isClaimed ? 'line-through text-stone-400' : 'text-stone-900'}">
+                <div onclick="if(${canInteract}) handleGiftClick('${targetPerson}', '${gift.id}')" class="${canInteract ? 'cursor-pointer' : ''} flex flex-wrap items-center gap-2 ${isClaimed ? 'line-through text-stone-400' : 'text-stone-900'}">
+                  ${gift.priority ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 border border-[#C5A059]/40 px-2 py-0.5 rounded-md no-underline">⭐ Preferito</span>` : ''}
                   <span class="font-semibold">${escapeHtml(gift.name)}</span>
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md ${isClaimed ? 'bg-stone-200/70 text-stone-400' : 'bg-[#173B2B]/10 text-[#173B2B]'}">€ ${gift.price}</span>
-                </label>
+                </div>
 
                 ${gift.details ? `
                   <p class="text-xs ${isClaimed ? 'text-slate-400' : 'text-stone-500'}">
@@ -991,7 +1311,9 @@
                 ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-md border ${isClaimedByMe ? 'bg-[#173B2B] text-white border-[#173B2B]' : 'bg-amber-50 text-amber-900 border-[#C5A059]/40'}">
                     Regalato da: ${escapeHtml(gift.claimedBy)}
                    </span>`
-                : `<span class="text-xs text-stone-400 font-medium">Disponibile</span>`
+                : `<button type="button" onclick="handleGiftClick('${targetPerson}', '${gift.id}')" class="text-xs text-[#173B2B] hover:bg-[#173B2B]/10 border border-[#173B2B]/25 px-3 py-1 rounded-md font-semibold transition cursor-pointer">
+                    Disponibile · Prenota
+                   </button>`
               }
             </div>
           </li>
