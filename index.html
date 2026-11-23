@@ -13,7 +13,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="application-name" content="Liste Natale" />
 
- <!-- Icona App & Favicon Babbo Natale -->
+  <!-- Icona App & Favicon Babbo Natale -->
   <link id="app-icon-link" rel="icon" type="image/png" href="./babbo-natale.png" />
   <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./babbo-natale.png" />
 
@@ -86,7 +86,7 @@
   <!-- Effetto neve soffice -->
   <canvas id="snow-canvas"></canvas>
 
-  <!-- SCHERMATA 0: LUCCHETTO CODICE DI ACCESSO -->
+  <!-- SCHERMATA 0: LUCCHETTO CODICE DI ACCESSO FAMIGLIA -->
   <div id="gate-screen" class="min-h-screen flex items-center justify-center p-4 sm:p-8 bg-[radial-gradient(ellipse_at_top,_#F3ECE1_0%,_#FAF7F2_70%)]">
     <div class="bg-white max-w-md w-full rounded-2xl shadow-[0_24px_60px_rgba(61,13,19,0.14)] border border-[#C5A059]/35 overflow-hidden relative z-10">
       <div class="hero-christmas-login px-6 py-9 text-center text-white">
@@ -140,7 +140,7 @@
     </div>
   </div>
 
-  <!-- SCHERMATA 1: SELEZIONE NOME (22 PARTECIPANTI) -->
+  <!-- SCHERMATA 1: SELEZIONE NOME (22 PARTECIPANTI CON PIN PERSONALE) -->
   <div id="login-screen" class="hidden min-h-screen flex items-center justify-center p-4 sm:p-8 bg-[radial-gradient(ellipse_at_top,_#F3ECE1_0%,_#FAF7F2_70%)]">
     <div class="bg-white max-w-3xl w-full rounded-2xl shadow-[0_24px_60px_rgba(61,13,19,0.12)] border border-[#C5A059]/30 overflow-hidden relative z-10">
 
@@ -158,16 +158,16 @@
         </h1>
         <div class="w-16 h-px bg-[#C5A059]/70 mx-auto mb-4"></div>
         <p class="text-sm text-stone-200/90 max-w-md mx-auto leading-relaxed">
-          Seleziona il tuo nome per accedere alla tua lista dei desideri e scoprire in riservatezza cosa regalare ai tuoi cari.
+          Seleziona il tuo nome e inserisci il tuo <strong>PIN segreto a 4 cifre</strong> per proteggere le sorprese dagli occhi indiscreti.
         </p>
       </div>
 
       <div class="h-1 w-full bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
 
       <div class="p-6 sm:p-10 bg-white">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
           <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">Partecipanti (22)</span>
-          <span class="text-xs text-[#C5A059] font-medium">✦ Seleziona il tuo profilo</span>
+          <span class="text-xs text-[#C5A059] font-medium">🔒 Profili protetti da PIN personale</span>
         </div>
 
         <div id="names-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
@@ -178,6 +178,87 @@
           Connessione al database di famiglia...
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- MODALE PIN PERSONALE (CREAZIONE AL PRIMO ACCESSO / VERIFICA SUCCESSIVA) -->
+  <div id="pin-modal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div class="bg-white max-w-sm w-full rounded-2xl shadow-2xl border border-[#C5A059]/40 overflow-hidden">
+      <div class="bg-[#3D0D13] px-6 py-5 text-white flex items-center justify-between">
+        <div>
+          <p id="pin-modal-badge" class="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E8CFA0]">
+            Accesso Riservato
+          </p>
+          <h3 id="pin-modal-title" class="font-serif-editorial text-xl font-bold mt-0.5">
+            Profilo di ...
+          </h3>
+        </div>
+        <button type="button" onclick="closePinModal()" class="text-white/70 hover:text-white text-xl leading-none px-2 py-1 cursor-pointer" title="Chiudi">
+          ✕
+        </button>
+      </div>
+
+      <div class="h-1 w-full bg-gradient-to-r from-[#3D0D13] via-[#C5A059] to-[#173B2B]"></div>
+
+      <form id="pin-form" class="p-6 space-y-4">
+        <p id="pin-modal-desc" class="text-xs text-stone-600 leading-relaxed">
+          Inserisci il tuo PIN personale di 4 cifre per entrare.
+        </p>
+
+        <div>
+          <label for="user-pin-input" id="pin-input-label" class="block text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-1.5">
+            PIN a 4 cifre
+          </label>
+          <input
+            type="password"
+            id="user-pin-input"
+            inputmode="numeric"
+            pattern="[0-9]{4}"
+            maxlength="4"
+            placeholder="••••"
+            required
+            autocomplete="off"
+            class="w-full px-4 py-3 text-center text-2xl tracking-[0.5em] font-bold rounded-xl border border-stone-300 bg-[#FAF7F2]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/25 focus:border-[#6B1D26] transition"
+          />
+        </div>
+
+        <div id="pin-confirm-wrapper" class="hidden">
+          <label for="user-pin-confirm" class="block text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-1.5">
+            Conferma il tuo PIN
+          </label>
+          <input
+            type="password"
+            id="user-pin-confirm"
+            inputmode="numeric"
+            pattern="[0-9]{4}"
+            maxlength="4"
+            placeholder="••••"
+            autocomplete="off"
+            class="w-full px-4 py-3 text-center text-2xl tracking-[0.5em] font-bold rounded-xl border border-stone-300 bg-[#FAF7F2]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6B1D26]/25 focus:border-[#6B1D26] transition"
+          />
+        </div>
+
+        <p id="pin-error-msg" class="hidden text-xs text-red-700 font-medium text-center">
+          PIN errato. Riprova.
+        </p>
+
+        <div class="flex gap-2.5 pt-1">
+          <button
+            type="button"
+            onclick="closePinModal()"
+            class="flex-1 py-2.5 px-4 rounded-xl border border-stone-300 text-xs font-semibold text-stone-600 hover:bg-stone-50 transition cursor-pointer"
+          >
+            Annulla
+          </button>
+          <button
+            type="submit"
+            id="pin-submit-btn"
+            class="flex-1 py-2.5 px-4 rounded-xl bg-[#173B2B] hover:bg-[#0F291E] text-white text-xs font-semibold shadow-xs transition cursor-pointer"
+          >
+            Entra →
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -394,10 +475,10 @@
     </footer>
   </div>
 
-  <!-- SCRIPT PWA + NEVE + CODICE ACCESSO + DATABASE -->
+  <!-- SCRIPT PWA + NEVE + CODICE ACCESSO + PIN PERSONALI + DATABASE -->
   <script type="module">
     // =========================================================================
-    // 0. CODICE D'ACCESSO SEGRETO (25122026)
+    // 0. CODICE D'ACCESSO SEGRETO FAMIGLIA (25122026)
     // =========================================================================
     const CODICE_ACCESSO = "25122026";
 
@@ -481,7 +562,7 @@
     })();
 
     // =========================================================================
-    // 3. CONFIGURAZIONE FIREBASE (PROGETTO NATALE-FAMIGLIA GIÀ COLLEGATO)
+    // 3. CONFIGURAZIONE FIREBASE (PROGETTO NATALE-FAMIGLIA)
     // =========================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyCqLyRhVU3Rk_9Z4d-VqHMfOgCmD08QyE0",
@@ -503,11 +584,15 @@
     let currentUser = localStorage.getItem('natale_current_user') || null;
     let currentYear = document.getElementById('year-select').value;
     let allData = {};
+    let userPins = {}; // Mappa { "Luca": "1234", ... }
+    let pendingUserLogin = null;
+    let isCreatingPin = false;
+
     let useFirebase = false;
     let db = null;
     let firestoreFns = null;
 
-    // Gestione sblocco Codice d'Accesso
+    // Gestione sblocco Codice d'Accesso Famiglia
     document.getElementById('family-code-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('family-code-input');
@@ -546,10 +631,14 @@
 
           onSnapshot(doc(db, "natale", docId), (docSnap) => {
             if (docSnap.exists()) {
-              allData = docSnap.data().anni || {};
+              const data = docSnap.data();
+              allData = data.anni || {};
+              userPins = data.pins || {};
             } else {
               allData = {};
+              userPins = {};
             }
+            renderLoginButtons();
             renderAll();
           });
           return;
@@ -559,45 +648,150 @@
       }
 
       const saved = localStorage.getItem('natale_liste_data');
+      const savedPins = localStorage.getItem('natale_user_pins');
       allData = saved ? JSON.parse(saved) : {};
+      userPins = savedPins ? JSON.parse(savedPins) : {};
+      renderLoginButtons();
       renderAll();
     }
 
     async function saveData() {
       if (useFirebase && db && firestoreFns) {
         await firestoreFns.setDoc(firestoreFns.doc(db, "natale", firestoreFns.docId), {
-          anni: allData
+          anni: allData,
+          pins: userPins
         });
       } else {
         localStorage.setItem('natale_liste_data', JSON.stringify(allData));
+        localStorage.setItem('natale_user_pins', JSON.stringify(userPins));
+        renderLoginButtons();
         renderAll();
       }
     }
 
     function renderLoginButtons() {
       const grid = document.getElementById('names-grid');
-      grid.innerHTML = PARTECIPANTI.map(nome => `
-        <button
-          onclick="login('${nome}')"
-          class="group py-3 px-4 rounded-lg border border-stone-200/90 bg-[#FAF7F2]/60 hover:bg-[#3D0D13] hover:text-white hover:border-[#3D0D13] text-sm font-medium text-stone-800 transition-all duration-150 cursor-pointer flex items-center justify-between shadow-2xs"
-        >
-          <span>${nome}</span>
-          <span class="text-[#C5A059] opacity-60 group-hover:opacity-100 text-xs transition-transform group-hover:translate-x-0.5">→</span>
-        </button>
-      `).join('');
+      grid.innerHTML = PARTECIPANTI.map(nome => {
+        const hasPin = Boolean(userPins[nome]);
+        return `
+          <button
+            onclick="requestUserLogin('${nome}')"
+            class="group py-3 px-4 rounded-lg border border-stone-200/90 bg-[#FAF7F2]/60 hover:bg-[#3D0D13] hover:text-white hover:border-[#3D0D13] text-sm font-medium text-stone-800 transition-all duration-150 cursor-pointer flex items-center justify-between shadow-2xs"
+          >
+            <span>${nome}</span>
+            <span class="text-xs ${hasPin ? 'text-[#173B2B] group-hover:text-[#E8CFA0]' : 'text-[#C5A059]'} transition-transform group-hover:translate-x-0.5" title="${hasPin ? 'Profilo protetto da PIN' : 'Primo accesso: imposta PIN'}">
+              ${hasPin ? '🔒' : '✦'}
+            </span>
+          </button>
+        `;
+      }).join('');
     }
 
-    window.login = function(nome) {
+    // =========================================================================
+    // 4. GESTIONE MODALE PIN PERSONALE (CREAZIONE E VERIFICA)
+    // =========================================================================
+    window.requestUserLogin = function(nome) {
+      pendingUserLogin = nome;
+      const existingPin = userPins[nome];
+      isCreatingPin = !existingPin;
+
+      const modal = document.getElementById('pin-modal');
+      const badge = document.getElementById('pin-modal-badge');
+      const title = document.getElementById('pin-modal-title');
+      const desc = document.getElementById('pin-modal-desc');
+      const label = document.getElementById('pin-input-label');
+      const input = document.getElementById('user-pin-input');
+      const confirmWrapper = document.getElementById('pin-confirm-wrapper');
+      const confirmInput = document.getElementById('user-pin-confirm');
+      const errorMsg = document.getElementById('pin-error-msg');
+      const submitBtn = document.getElementById('pin-submit-btn');
+
+      input.value = '';
+      confirmInput.value = '';
+      errorMsg.classList.add('hidden');
+      title.textContent = `Profilo di ${nome}`;
+
+      if (isCreatingPin) {
+        badge.textContent = "Primo Accesso · Crea il tuo PIN";
+        desc.innerHTML = `Ciao <strong>${nome}</strong>! Scegli un <strong>PIN segreto di 4 cifre</strong> (es. anno di nascita o 4 numeri a tua scelta). Ti servirà ogni volta che entri nel tuo profilo, così nessuno potrà sbirciare la tua lista.`;
+        label.textContent = "Scegli un PIN di 4 cifre";
+        confirmWrapper.classList.remove('hidden');
+        confirmInput.required = true;
+        submitBtn.textContent = "Salva PIN ed Entra →";
+      } else {
+        badge.textContent = "Verifica Identità";
+        desc.innerHTML = `Inserisci il <strong>PIN personale di 4 cifre</strong> scelto da <strong>${nome}</strong> per accedere al profilo.`;
+        label.textContent = "Inserisci il tuo PIN";
+        confirmWrapper.classList.add('hidden');
+        confirmInput.required = false;
+        submitBtn.textContent = "Sblocca Profilo →";
+      }
+
+      modal.classList.remove('hidden');
+      setTimeout(() => input.focus(), 50);
+    };
+
+    window.closePinModal = function() {
+      pendingUserLogin = null;
+      document.getElementById('pin-modal').classList.add('hidden');
+    };
+
+    document.getElementById('pin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!pendingUserLogin) return;
+
+      const input = document.getElementById('user-pin-input');
+      const confirmInput = document.getElementById('user-pin-confirm');
+      const errorMsg = document.getElementById('pin-error-msg');
+      const pinVal = input.value.trim();
+
+      if (!/^\d{4}$/.test(pinVal)) {
+        errorMsg.textContent = "Il PIN deve essere composto da 4 numeri.";
+        errorMsg.classList.remove('hidden');
+        input.focus();
+        return;
+      }
+
+      if (isCreatingPin) {
+        const confirmVal = confirmInput.value.trim();
+        if (pinVal !== confirmVal) {
+          errorMsg.textContent = "I due PIN non coincidono. Riprova.";
+          errorMsg.classList.remove('hidden');
+          confirmInput.value = '';
+          confirmInput.focus();
+          return;
+        }
+        userPins[pendingUserLogin] = pinVal;
+        await saveData();
+        const chosenUser = pendingUserLogin;
+        closePinModal();
+        completeLogin(chosenUser);
+      } else {
+        if (userPins[pendingUserLogin] === pinVal) {
+          const chosenUser = pendingUserLogin;
+          closePinModal();
+          completeLogin(chosenUser);
+        } else {
+          errorMsg.textContent = `PIN errato per ${pendingUserLogin}. Accesso negato.`;
+          errorMsg.classList.remove('hidden');
+          input.value = '';
+          input.focus();
+        }
+      }
+    });
+
+    function completeLogin(nome) {
       currentUser = nome;
       localStorage.setItem('natale_current_user', nome);
       showApp();
-    };
+    }
 
     window.logout = function() {
       currentUser = null;
       localStorage.removeItem('natale_current_user');
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('login-screen').classList.remove('hidden');
+      renderLoginButtons();
     };
 
     function showApp() {
@@ -831,7 +1025,7 @@
       renderOtherList();
     });
 
-    // Avvio flusso: Gate Codice Accesso -> Selezione Nome -> App
+    // Avvio flusso: Gate Codice Accesso -> Selezione Nome (+ PIN) -> App
     renderLoginButtons();
     if (isGateUnlocked) {
       document.getElementById('gate-screen').classList.add('hidden');
