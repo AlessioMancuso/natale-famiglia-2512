@@ -13,9 +13,9 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="application-name" content="Liste Natale" />
 
-  <!-- Icona App & Favicon generata in vettoriale (Bordeaux & Oro) -->
-  <link id="app-icon-link" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%233D0D13'/%3E%3Crect x='24' y='24' width='464' height='464' rx='92' fill='none' stroke='%23C5A059' stroke-width='8'/%3E%3Cpath d='M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240' fill='none' stroke='%23E8CFA0' stroke-width='22' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%233D0D13'/%3E%3Cpath d='M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240' fill='none' stroke='%23E8CFA0' stroke-width='22' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+ <!-- Icona App & Favicon Babbo Natale -->
+  <link id="app-icon-link" rel="icon" type="image/png" href="./babbo-natale.png" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./babbo-natale.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -405,8 +405,7 @@
     // 1. REGISTRAZIONE MANIFEST DINAMICO PER INSTALLAZIONE SU TELEFONO (PWA)
     // =========================================================================
     (function setupPWAManifest() {
-      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#3D0D13"/><rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="#C5A059" stroke-width="8"/><path d="M256 176v208M256 176v-32a32 32 0 1 1 32 32h-32zm0 0v-40a40 40 0 1 0-40 40h40zm-112 64h224M144 240a32 32 0 1 1 0-64h224a32 32 0 1 1 0 64M144 240v112a32 32 0 0 0 32 32h160a32 32 0 0 0 32-32V240" fill="none" stroke="#E8CFA0" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-      const iconDataUrl = "data:image/svg+xml," + encodeURIComponent(iconSvg);
+      const iconAbsoluteUrl = new URL("./babbo-natale.png", window.location.href).href;
 
       const manifest = {
         name: "Liste di Natale — Famiglia",
@@ -417,9 +416,9 @@
         theme_color: "#3D0D13",
         icons: [
           {
-            src: iconDataUrl,
+            src: iconAbsoluteUrl,
             sizes: "512x512",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "any maskable"
           }
         ]
